@@ -2,23 +2,21 @@ GEM
   remote: https://rubygems.org/
   specs:
     atomic (1.1.99)
-    daemons (1.2.3)
-    eventmachine (1.0.7)
+    atomic (1.1.99-java)
     hamster (1.0.0)
       atomic (~> 1.1)
+    puma (2.12.2)
+    puma (2.12.2-java)
     rack (1.6.4)
-    thin (1.6.3)
-      daemons (~> 1.0, >= 1.0.9)
-      eventmachine (~> 1.0)
-      rack (~> 1.0)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
   hamster
+  puma
   rack
-  thin
 
 BUNDLED WITH
-   1.10.5
+   1.10.6

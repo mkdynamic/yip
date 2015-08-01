@@ -1,1 +1,1 @@
-web: bundle exec rackup -Ilib -sthin config.ru
+web: bundle exec rackup -I lib --server puma --host $HOST --port $PORT config.ru

@@ -1,4 +1,5 @@
-$stdout.sync = true
+# STDOUT.sync = true
+# STDERR.sync = true
 
 require 'yip'
 
