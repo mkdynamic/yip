@@ -1,0 +1,24 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    atomic (1.1.99)
+    daemons (1.2.3)
+    eventmachine (1.0.7)
+    hamster (1.0.0)
+      atomic (~> 1.1)
+    rack (1.6.4)
+    thin (1.6.3)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0)
+      rack (~> 1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  hamster
+  rack
+  thin
+
+BUNDLED WITH
+   1.10.5
