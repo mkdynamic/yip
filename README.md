@@ -14,7 +14,7 @@ go get -u github.com/ddollar/forego
 
 Install gems and start the web server:
 
-```ruby
+```bash
 bundle
 forego start
 ```
