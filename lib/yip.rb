@@ -137,6 +137,7 @@ module Yip
 
   module NotFound
     extend self
+    require 'hiccup'
 
     def xf(req)
       html = Hiccup.html(
