@@ -1,7 +1,7 @@
-# WIP Port of https://github.com/krisajenkins/yesql
-module Yisql
-  extend self
+require 'bundler/setup'
 
+# WIP Port of https://github.com/krisajenkins/yesql
+module Yisql extend self
   class ConnMysql2
     require 'mysql2'
 

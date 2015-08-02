@@ -1,6 +1,11 @@
 source 'https://rubygems.org'
 
+# yis
 gem 'rack'
-gem 'puma'
 gem 'hamster'
-gem 'mysql2'
+
+# # yisql
+# gem 'mysql2'
+
+# nop
+gem 'puma'

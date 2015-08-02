@@ -5,7 +5,6 @@ GEM
     atomic (1.1.99-java)
     hamster (1.0.0)
       atomic (~> 1.1)
-    mysql2 (0.3.19)
     puma (2.12.2)
     puma (2.12.2-java)
     rack (1.6.4)
@@ -16,7 +15,6 @@ PLATFORMS
 
 DEPENDENCIES
   hamster
-  mysql2
   puma
   rack
 

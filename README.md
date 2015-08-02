@@ -1,4 +1,4 @@
-# Yip
+# Yis
 
 Experiment writing a web application with Rack/Ruby in a functional style.
 
