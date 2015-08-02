@@ -1,15 +1,31 @@
 require 'bundler'
 Bundler.require
 
+def v(*args) Hamster.vector(*args) end
+def h(*args) Hamster.hash(*args) end
+
 module Yip
+  module Log
+    require 'logger'
+
+    class << self
+      @@logger = Logger.new(STDOUT)
+      @@logger.level = Logger::DEBUG
+      @@logger.formatter = lambda { |severity, _, _, message| "#{severity.ljust(5)} #{message}\n" }
+
+      v(:debug, :info, :warn, :error, :fatal).each do |level|
+        define_method level do |message|
+          @@logger.send(level, message)
+        end
+      end
+    end
+  end
+
   module RackAdapter
     def self.call(env)
+      xfers = v(ReqId, Router)
       req = Req.build(env)
-
-      res = Res.build_404
-      res = RequestId.process(req, res)
-      res = Router.process(req, res)
-
+      res = xfers.reduce(Res.build) { |res, xfer| xfer.xf(req, res) }
       Res.to_rack(res)
     end
   end
@@ -18,39 +34,31 @@ module Yip
     def self.build(rack_env)
       rack_req = Rack::Request.new(rack_env)
 
-      {
-        params: rack_req.params,
+      h(params: h(rack_req.params),
         path: rack_req.path,
-        headers: {
-          content_type: rack_req.content_type
-        }
-      }
+        headers: h(content_type: rack_req.content_type))
     end
   end
 
   module Res
-    def self.build_404
-      Hamster.hash(
-        code: 404,
-        headers: Hamster.hash('content-type' => 'text/html'),
-        body: ['Not found!']
-      )
+    def self.build
+      h(code: nil,
+        headers: h,
+        body: v)
     end
 
     def self.to_rack(res)
-      [
-        res[:code],
+      v(res[:code],
         res[:headers].to_hash,
-        res[:body]
-      ]
+        res[:body]).to_a
     end
   end
 
-  module RequestId
+  module ReqId
     require 'securerandom'
 
-    def self.process(req, res)
-      # puts 'request-id'
+    def self.xf(req, res)
+      Log.debug 'req-id'
 
       res
         .update_in(:headers, 'x-request-id') { SecureRandom.uuid }
@@ -58,25 +66,58 @@ module Yip
   end
 
   module Router
-    def self.process(req, res)
-      # puts 'router'
+    def self.xf(req, res)
+      Log.debug 'router'
 
       case req[:path]
-      when '/' then Home.process(req, res)
-      else res
+      when '/' then Home.xf(req, res)
+      when '/lottery' then Lottery.xf(req, res)
+      else req
       end
     end
   end
 
   module Home
-    def self.process(req, res)
-      # puts 'home'
+    require 'hiccup'
+
+    def self.xf(req, res)
+      Log.debug 'home'
+
+      body = Hiccup.html(
+        v(:html,
+          v(:head,
+            v(:title, "Hello World")),
+          v(:body,
+            v(:header,
+              v(:'h1.header', "Hello World!"),
+              v(:p, { id: 'why' }, "because we must.")))))
 
       res
         .update_in(:code) { 200 }
-        .update_in(:body) { ['Hi!'] }
+        .update_in(:body) { [body] }
+        .update_in(:headers, 'content-type') { 'text/html' }
+        .update_in(:headers, 'content-length') { body.size.to_s }
+    end
+  end
+
+  module Lottery
+    def self.xf(req, res)
+      Log.debug 'lottery'
+
+      res
+        .update_in(:code) { 200 }
+        .update_in(:body) { gen_nums }
         .update_in(:headers, 'content-type') { 'text/plain' }
-        .update_in(:headers, 'content-length') { '3' }
+    end
+
+    def self.gen_nums
+      Enumerator.new { |yielder|
+        loop do
+          Log.debug "gen num"
+          sleep 0.1
+          yielder << "#{rand(100)}\n"
+        end
+      }.lazy
     end
   end
 end

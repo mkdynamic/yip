@@ -1,10 +1,10 @@
-# STDOUT.sync = true
-# STDERR.sync = true
+STDOUT.sync = true
+STDERR.sync = true
 
 require 'yip'
 
 builder = Rack::Builder.new do
-  use Rack::Reloader
+  use Rack::Reloader, 1
   use Rack::Runtime
   run Yip::RackAdapter
 end
