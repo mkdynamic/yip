@@ -3,10 +3,10 @@ GEM
   specs:
     atomic (1.1.99)
     atomic (1.1.99-java)
+    execjs (2.6.0)
     hamster (1.0.0)
       atomic (~> 1.1)
     puma (2.12.2)
-    puma (2.12.2-java)
     rack (1.6.4)
 
 PLATFORMS
@@ -14,6 +14,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  execjs
   hamster
   puma
   rack
