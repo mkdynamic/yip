@@ -1,0 +1,32 @@
+.chat-window {
+  margin: 0;
+  padding: 0;
+}
+
+.chat-window-header {
+  overflow: hidden;
+  padding: 5px;
+}
+
+.chat-window-header-title {
+  float: left;
+}
+
+.chat-window-header-controls {
+  float: right;
+}
+
+.chat-window-main {
+  padding: 5px;
+}
+
+/* chatbox */
+
+.chatbox {
+}
+
+.chatbox-typer {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+}
