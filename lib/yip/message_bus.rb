@@ -4,11 +4,7 @@ module Yip module MessageBus extend self
       on.message do |channel, msg|
         blk.call(JSON.load(msg))
       end
-    end
-  end
-
-  def unsubscribe(redis, channel_name)
-    redis.unsubscribe("message_bus:#{channel_name}")
+    end # blocks
   end
 
   def publish(redis, channel_name, message)

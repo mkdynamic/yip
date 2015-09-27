@@ -1,7 +1,7 @@
 require 'hamster'
 
-def v(*args) Hamster.vector(*args) end
-def h(*args) Hamster.hash(*args) end
+def v(*args) Hamster::Vector[*args] end
+def h(*args) Hamster::Hash[*args] end
 
 module Yis
   module Stack extend self
@@ -62,8 +62,10 @@ module Yis
 
       h(params: h(rack_req.params),
         path: rack_req.path,
-        headers: h(content_type: rack_req.content_type),
-        res: Res.build)
+        method: rack_req.request_method.downcase.to_sym,
+        headers: h(content_type: rack_req.content_type, cookies: h(rack_req.cookies)),
+        res: Res.build,
+        body: rack_req.body)
     end
 
     def to_rack(req)
@@ -95,6 +97,12 @@ module Yis
         def render_js(js)
           lambda do |res|
             Generic.process(res, 'text/javascript', js)
+          end
+        end
+
+        def render_json(data)
+          lambda do |res|
+            Generic.process(res, 'application/json', JSON.dump(data))
           end
         end
 

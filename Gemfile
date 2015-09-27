@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 # yis
-gem 'rack'
-gem 'hamster'
+gem 'rack', git: 'https://github.com/rack/rack.git'
+gem 'hamster', git: 'https://github.com/hamstergem/hamster.git'
 
 # yisql
 gem 'mysql2'

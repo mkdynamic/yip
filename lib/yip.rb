@@ -55,24 +55,29 @@ module Yip module System extend self
 
     rack_adapter_ws_wrap = lambda do |env|
       if env['HTTP_UPGRADE'] == 'websocket'
-        redis_in = Redis.new
-        redis_out = sys[:redis]
+        cookies = Rack::Utils.parse_cookies(env)
+        channel = cookies['channel']
+        client = cookies['client']
+        redis_in, redis_out = Redis.new, sys[:redis]
         socket_id = SecureRandom.hex(16)
         tubesock = Tubesock.hijack(env)
+        redis_subscribe_thread = nil
         tubesock.onopen do
-          puts "ws open #{socket_id}"
+          puts "ws open #{socket_id} #{channel}"
         end
         tubesock.onmessage do |msg|
-          puts "ws message #{socket_id} #{msg}"
-          Yip::MessageBus.publish(redis_out, socket_id, JSON.load(msg))
+          puts "ws message #{socket_id} #{channel} #{msg}"
+          message = Hamster.from(JSON.load(msg)).update_in('data', 'typer', 'client') { client }
+          Yip::MessageBus.publish(redis_out, channel, Hamster.to_ruby(message))
         end
         tubesock.onclose do
-          puts "ws close #{socket_id}"
-          Yip::MessageBus.unsubscribe(redis_in, socket_id)
-          redis_in.disconnect
+          puts "ws closing #{socket_id} #{channel}"
+          redis_subscribe_thread.kill rescue nil
+          redis_in.disconnect!
+          puts "ws closed #{socket_id} #{channel}"
         end
-        Thread.new do
-          Yip::MessageBus.subscribe(redis_in, socket_id) do |message|
+        redis_subscribe_thread = Thread.new do
+          Yip::MessageBus.subscribe(redis_in, channel) do |message|
             tubesock.send_data(JSON.dump(message))
           end
         end
