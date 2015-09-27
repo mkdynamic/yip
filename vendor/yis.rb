@@ -1,4 +1,3 @@
-require 'bundler/setup'
 require 'hamster'
 
 def v(*args) Hamster.vector(*args) end
@@ -92,6 +91,18 @@ module Yis
             Generic.process(res, 'text/html', html)
           end
         end
+
+        def render_js(js)
+          lambda do |res|
+            Generic.process(res, 'text/javascript', js)
+          end
+        end
+
+        def render_css(css)
+          lambda do |res|
+            Generic.process(res, 'text/css', css)
+          end
+        end
       end
 
       base.extend(api)
@@ -102,7 +113,7 @@ module Yis
         res
           .update_in(:body) { [content] }
           .update_in(:headers, 'content-type') { content_type }
-          .update_in(:headers, 'content-length') { content.size.to_s }
+          .update_in(:headers, 'content-length') { content.bytesize.to_s }
       end
     end
 
@@ -143,7 +154,7 @@ module Yis
         html = Hiccup.html(
           v(:html,
             v(:body,
-              v(:h1, "Not found"))))
+              v(:h1, 'Not found'))))
 
         req
           .update_in(:res, :code) { 404 }
@@ -156,7 +167,7 @@ module Yis
         path_prefix_pattern = /^#{Regexp.escape(sys[:assets_path_prefix])}\//
         return req unless req[:path] =~ path_prefix_pattern
 
-        js = File.read(req[:path].sub(path_prefix_pattern, ""))
+        js = File.read(req[:path].sub(path_prefix_pattern, ''))
 
         req
           .update_in(:res, :code) { 200 }
@@ -191,11 +202,11 @@ module Yis
   #     html = Hiccup.html(
   #       v(:html,
   #         v(:head,
-  #           v(:title, "Hello World")),
+  #           v(:title, 'Hello World')),
   #         v(:body,
   #           v(:header,
-  #             v(:'h1.header', "Hello World, malord!"),
-  #             v(:p, { id: 'why' }, "because we must.")))))
+  #             v(:'h1.header', 'Hello World, malord!'),
+  #             v(:p, { id: 'why' }, 'because we must.')))))
 
   #     req
   #       .update_in(:res, :code) { 200 }
@@ -251,7 +262,7 @@ module Yis
   #   def gen_nums
   #     Enumerator.new { |yielder|
   #       loop do
-  #         Log.debug "gen num"
+  #         Log.debug 'gen num'
   #         sleep 0.1
   #         yielder << "#{rand(100)}\n"
   #       end

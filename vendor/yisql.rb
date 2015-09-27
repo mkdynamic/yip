@@ -1,12 +1,10 @@
-require 'bundler/setup'
-
 # WIP Port of https://github.com/krisajenkins/yesql
 module Yisql extend self
   class ConnMysql2
     require 'mysql2'
 
     def initialize(spec = {})
-      spec = spec.merge(host: "localhost", username: "root", as: :hash, symbolize_keys: true)
+      spec = spec.merge(host: 'localhost', username: 'root', as: :hash, symbolize_keys: true)
       @client = ::Mysql2::Client.new(spec)
     end
 
@@ -25,7 +23,7 @@ module Yisql extend self
       case value
       when Numeric then @client.escape(value.to_s)
       when String then "'#{@client.escape(value.to_s)}'"
-      when Enumerable then value.map { |v| escape(v) }.join(",")
+      when Enumerable then value.map { |v| escape(v) }.join(',')
       else raise "unknown value type #{value.class}"
       end
     end
@@ -41,8 +39,8 @@ module Yisql extend self
       RUBY
     else
       eval <<-RUBY
-        lambda { |conn, #{param_names.map { |n| "#{n}: nil" }.join(", ")}|
-          conn.execute(sql, #{param_names.map { |n| "#{n}: #{n}" }.join(", ")})
+        lambda { |conn, #{param_names.map { |n| "#{n}: nil" }.join(', ')}|
+          conn.execute(sql, #{param_names.map { |n| "#{n}: #{n}" }.join(', ')})
         }
       RUBY
     end

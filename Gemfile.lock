@@ -6,8 +6,14 @@ GEM
     execjs (2.6.0)
     hamster (1.0.0)
       atomic (~> 1.1)
+    mysql2 (0.3.19)
     puma (2.12.2)
-    rack (1.6.4)
+    puma (2.12.2-java)
+    rack (1.5.0)
+    tubesock (0.2.5)
+      rack (>= 1.5.0)
+      websocket (>= 1.1.0)
+    websocket (1.2.2)
 
 PLATFORMS
   java
@@ -16,8 +22,10 @@ PLATFORMS
 DEPENDENCIES
   execjs
   hamster
+  mysql2
   puma
   rack
+  tubesock
 
 BUNDLED WITH
    1.10.6

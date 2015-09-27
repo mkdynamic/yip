@@ -3,9 +3,11 @@ source 'https://rubygems.org'
 # yis
 gem 'rack'
 gem 'hamster'
-# gem 'yisql'
-# gem 'mysql2'
 
-# nop
+# yisql
+gem 'mysql2'
+
+# yip
 gem 'puma'
 gem 'execjs'
+gem 'tubesock'
